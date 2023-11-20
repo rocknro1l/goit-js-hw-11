@@ -32,13 +32,14 @@ form.addEventListener('submit', event => {
   query = event.target.elements.searchQuery.value;
   event.preventDefault();
   removeItems();
-
+  currentPage = 1;
+  observer.unobserve(target);
   let inputFormValue = query.toLowerCase().trim();
 
   if (inputFormValue === '') {
     return;
   }
-  fetchData(query)
+  fetchData(query, currentPage)
     .then(checkSearchData)
     .catch(err => console.log(err));
 });
@@ -119,3 +120,5 @@ function checkForMoreData(search) {
     observer.unobserve(target);
   }
 }
+
+console.log('1');
