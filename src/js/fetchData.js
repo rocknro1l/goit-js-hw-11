@@ -8,8 +8,6 @@ async function fetchData(query, currentPage) {
   const url = `?key=${API_KEY}&q=${query}&image_type=photo&pretty=true&per_page=${per_page}&page=${currentPage}&orientation=horizontal&safesearch=true`;
   try {
     const { data } = await axios.get(url);
-    console.log('data:', data);
-
     return data;
   } catch (error) {
     console.log(error);

@@ -8,6 +8,7 @@ const gallery = document.querySelector('.gallery');
 const form = document.querySelector('.search-form');
 const target = document.querySelector('.js-guard');
 
+let query = '';
 let currentPage = 1;
 let options = {
   root: null,
@@ -30,7 +31,7 @@ function onScroll(entries, observer) {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  const query = event.target.elements.searchQuery.value;
+  query = event.target.elements.searchQuery.value;
   removeItems();
   currentPage = 1;
   observer.unobserve(target);
@@ -40,12 +41,7 @@ form.addEventListener('submit', async event => {
   if (inputFormValue === '') {
     return;
   }
-  try {
-    await fetchData(query, currentPage).then(checkSearchData);
-    console.log(fetchData(query, currentPage));
-  } catch (error) {
-    console.log(error);
-  }
+  await fetchData(query, currentPage).then(checkSearchData);
 });
 
 let galleryLightbox = new SimpleLightbox('.photo-card a', {
