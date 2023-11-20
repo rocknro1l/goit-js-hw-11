@@ -30,7 +30,7 @@ function onScroll(entries, observer) {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  query = event.target.elements.searchQuery.value;
+  const query = event.target.elements.searchQuery.value;
   removeItems();
   currentPage = 1;
   observer.unobserve(target);
