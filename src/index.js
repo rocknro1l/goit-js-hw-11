@@ -120,3 +120,5 @@ function checkForMoreData(search) {
     observer.unobserve(target);
   }
 }
+
+console.log('2');
