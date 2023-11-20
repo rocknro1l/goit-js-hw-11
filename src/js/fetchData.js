@@ -16,5 +16,3 @@ async function fetchData(query, currentPage) {
   }
 }
 export { fetchData };
-
-console.log('2');

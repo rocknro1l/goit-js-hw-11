@@ -34,6 +34,7 @@ form.addEventListener('submit', async event => {
   removeItems();
   currentPage = 1;
   observer.unobserve(target);
+
   let inputFormValue = query.toLowerCase().trim();
 
   if (inputFormValue === '') {
@@ -41,6 +42,7 @@ form.addEventListener('submit', async event => {
   }
   try {
     await fetchData(query, currentPage).then(checkSearchData);
+    console.log(fetchData(query, currentPage));
   } catch (error) {
     console.log(error);
   }
@@ -122,5 +124,3 @@ function checkForMoreData(search) {
     observer.unobserve(target);
   }
 }
-
-console.log('1');
