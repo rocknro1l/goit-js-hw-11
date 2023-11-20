@@ -28,41 +28,42 @@ function onScroll(entries, observer) {
   });
 }
 
-form.addEventListener('submit', event => {
-  query = event.target.elements.searchQuery.value;
-  event.preventDefault();
-  removeItems();
-  currentPage = 1;
-  observer.unobserve(target);
-  let inputFormValue = query.toLowerCase().trim();
+try {
+  form.addEventListener('submit', event => {
+    query = event.target.elements.searchQuery.value;
+    event.preventDefault();
+    removeItems();
+    currentPage = 1;
+    observer.unobserve(target);
+    let inputFormValue = query.toLowerCase().trim();
 
-  if (inputFormValue === '') {
-    return;
-  }
-  fetchData(query, currentPage)
-    .then(checkSearchData)
-    .catch(err => console.log(err));
-});
+    if (inputFormValue === '') {
+      return;
+    }
+    fetchData(query, currentPage)
+      .then(checkSearchData)
+      .catch(err => console.log(err));
+  });
 
-let galleryLightbox = new SimpleLightbox('.photo-card a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-  captionPosition: 'bottom',
-});
+  let galleryLightbox = new SimpleLightbox('.photo-card a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+    captionPosition: 'bottom',
+  });
 
-function markupContent(data) {
-  const markup = data.hits
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<div class="photo-card">
+  function markupContent(data) {
+    const markup = data.hits
+      .map(
+        ({
+          webformatURL,
+          largeImageURL,
+          tags,
+          likes,
+          views,
+          comments,
+          downloads,
+        }) => {
+          return `<div class="photo-card">
         <a class="gallery__item" href="${largeImageURL}">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         </a>
@@ -81,11 +82,14 @@ function markupContent(data) {
           </p>
         </div>
       </div>`;
-      }
-    )
-    .join('');
+        }
+      )
+      .join('');
 
-  gallery.insertAdjacentHTML('beforeend', markup);
+    gallery.insertAdjacentHTML('beforeend', markup);
+  }
+} catch (error) {
+  console.log(error);
 }
 
 function removeItems() {
