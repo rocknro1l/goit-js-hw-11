@@ -43,7 +43,8 @@ form.addEventListener('submit', async event => {
     Notiflix.Notify.failure('Please write query');
     return;
   }
-  await fetchData(query, currentPage).then(checkSearchData);
+  const response = await fetchData(query, currentPage);
+  checkSearchData(response);
 });
 
 let galleryLightbox = new SimpleLightbox('.photo-card a', {
@@ -94,11 +95,11 @@ function removeItems() {
   gallery.innerHTML = '';
 }
 
-function checkSearchData(search) {
-  const total = search.total;
+function checkSearchData(response) {
+  const total = response.total;
   if (total > 0) {
     Notiflix.Notify.success(`We have the ${total} pictures fo you!`);
-    markupContent(search);
+    markupContent(response);
     galleryLightbox.refresh();
     observer.observe(target);
   }
@@ -114,9 +115,9 @@ function checkSearchData(search) {
   }
 }
 
-function checkForMoreData(search) {
-  const lastPage = Math.round(search.totalHits / 40);
-  markupContent(search);
+function checkForMoreData(response) {
+  const lastPage = Math.round(response.totalHits / 40);
+  markupContent(response);
   galleryLightbox.refresh();
   if (currentPage === lastPage) {
     Notify.info("We're sorry, but you've reached the end of search results.");
