@@ -3,6 +3,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import { fetchData } from './js/fetchData';
+import { last } from 'lodash';
 
 const gallery = document.querySelector('.gallery');
 const form = document.querySelector('.search-form');
@@ -18,13 +19,12 @@ let options = {
 
 let observer = new IntersectionObserver(onScroll, options);
 
-function onScroll(entries, observer) {
-  entries.forEach(entry => {
+async function onScroll(entries) {
+  entries.forEach(async entry => {
     if (entry.isIntersecting) {
       currentPage += 1;
-      fetchData(query, currentPage)
-        .then(checkForMoreData)
-        .catch(err => console.log(err));
+      const response = await fetchData(query, currentPage);
+      checkForMoreData(response);
     }
   });
 }
@@ -34,11 +34,13 @@ form.addEventListener('submit', async event => {
   query = event.target.elements.searchQuery.value;
   removeItems();
   currentPage = 1;
+
   observer.unobserve(target);
 
   let inputFormValue = query.toLowerCase().trim();
 
   if (inputFormValue === '') {
+    Notiflix.Notify.failure('Please write query');
     return;
   }
   await fetchData(query, currentPage).then(checkSearchData);
@@ -107,15 +109,16 @@ function checkSearchData(search) {
     );
     removeItems();
   }
+  if (total < 40) {
+    observer.unobserve(target);
+  }
 }
 
 function checkForMoreData(search) {
+  const lastPage = Math.round(search.totalHits / 40);
   markupContent(search);
   galleryLightbox.refresh();
-  if (search.hits.length === 40) {
-    return;
-  }
-  if (search.hits.length < 40 && search.hits.length !== 0) {
+  if (currentPage === lastPage) {
     Notify.info("We're sorry, but you've reached the end of search results.");
     observer.unobserve(target);
   }
